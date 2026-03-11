@@ -24,6 +24,7 @@
     <ProjectGuid>{8b863fca-84c8-4196-a6b3-ca6557ee6665}</ProjectGuid>
     <RootNamespace>samplediagram</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Trypo</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
