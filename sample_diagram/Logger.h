@@ -3,6 +3,7 @@
 #include<iostream>
 using namespace std;
 
+// print on cmd
 class Logger{
 private:
 	string message;
