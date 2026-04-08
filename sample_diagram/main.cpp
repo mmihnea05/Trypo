@@ -2,7 +2,7 @@
 #include <nanodbc/nanodbc.h>
 #include <exception>
 using namespace std;
-#include "Users.h"
+#include "Client.h"
 
 int main() {
     try {
@@ -18,7 +18,7 @@ int main() {
             std::cout << "Nume DBMS: " << conn.dbms_name() << std::endl;
         }
 
-        Users* u=new Users("Alin","parola","a@gmail.com","0788888888","2000-11-21","Romania","M","Strada Nu stiu"); // Cream un obiect de tip User
+        IUsers* u=new Client("Alin","parola","c@gmail.com","0788888888","2000-11-21","Romania","M","Strada Nu stiu"); // Cream un obiect de tip User
 
         // --- PASUL 2: INSERAREA ---
         cout << "Se insereaza utilizatorul: " << u->getName() << "..." << endl;
