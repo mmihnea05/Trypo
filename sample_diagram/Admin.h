@@ -4,4 +4,10 @@ class Admin : public CUsers{
 public:
 	Admin(string name, string password, string mail, string phoneNumber): CUsers(name,password,mail,phoneNumber){}
 	~Admin() {}
+
+	virtual std::string getBirthDate() const { return ""; }
+	virtual std::string getCountry() const  { return ""; }
+	virtual std::string getGender() const { return ""; }
+	virtual std::string getAddress() const { return ""; }
+
 };

@@ -10,10 +10,10 @@ protected:
 
 public:
 	CUsers(string name,string password, string mail,string phoneNumber): name(name),password(password), mail(mail), phoneNumber(phoneNumber){}
-	~CUsers() {}
-	std::string getName() const { return name; }
-	std::string getPassword() const { return password; }
-	std::string getMail() const { return mail; }
-	std::string getPhone() const { return phoneNumber; }
+	virtual ~CUsers() {}
+	std::string getName() const override{ return name; }
+	std::string getPassword() const override { return password; }
+	std::string getMail() const override { return mail; }
+	std::string getPhone() const override { return phoneNumber; }
 };
 
