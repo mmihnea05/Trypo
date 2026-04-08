@@ -139,5 +139,8 @@
     <None Include="ClassDiagram.cd">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="log.in">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -41,9 +41,11 @@ void Service::registerUser(IUsers* newUser) {
         nanodbc::execute(stmt);
 
         Logger::getInstanceLogger().setMessage("Utilizator inregistrat cu succes: " + n);
+        Logger::getInstanceLogger().printMessageOnFile();
     }
     catch (const std::exception& e) {
         Logger::getInstanceLogger().setMessage("Eroare la inregistrare: " + std::string(e.what()));
+        Logger::getInstanceLogger().printMessageOnFile();
         throw;
     }
 }
@@ -81,16 +83,18 @@ void Service::loginUser(string mail,string password) {
             }
             cout << "Login reusit pentru: " << nume << " [" << rol << "]";
             Logger::getInstanceLogger().setMessage("Login reusit pentru: " + nume + " [" + role + "]");
+            Logger::getInstanceLogger().printMessageOnFile();
         }
         else {
-            cout << "Tentativa de login esuata pentru: ";
             Logger::getInstanceLogger().setMessage("Tentativa de login esuata pentru: " + mail);
+            Logger::getInstanceLogger().printMessageOnFile();
             delete this->user;
             this->user = nullptr;
         }
     }
     catch (const std::exception& e) {
         Logger::getInstanceLogger().setMessage("Eroare SQL Login: " + std::string(e.what()));
+        Logger::getInstanceLogger().printMessageOnFile();
         delete this->user;
         this->user = nullptr;
     }

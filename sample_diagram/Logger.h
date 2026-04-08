@@ -1,6 +1,7 @@
 #pragma once
 #include<string>
 #include<iostream>
+#include<fstream>
 using namespace std;
 
 // print on cmd
@@ -17,5 +18,6 @@ public:
 	static Logger& getInstanceLogger();
 	void setMessage(string message);
 	void printMessage();
+	void printMessageOnFile();
 };
 
