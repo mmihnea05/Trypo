@@ -1,5 +1,5 @@
 #pragma once
-class Users;
+class IUsers;
 class IRoom;
 
 typedef enum status {
@@ -10,7 +10,7 @@ class Accomodation{
 private:
 	int accomodationId; // static
 	int clientId;
-	Users* user;
+	IUsers* user;
 	IRoom* rentedRoom;
 	status accomodationStatus;
 

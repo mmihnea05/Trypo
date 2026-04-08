@@ -130,12 +130,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Accomodation.cpp" />
+    <ClCompile Include="Admin.cpp" />
+    <ClCompile Include="Client.cpp" />
     <ClCompile Include="CRoom.cpp" />
+    <ClCompile Include="CUsers.cpp" />
     <ClCompile Include="Date.cpp" />
     <ClCompile Include="Double.cpp" />
     <ClCompile Include="Extras.cpp" />
     <ClCompile Include="Facilities.cpp" />
     <ClCompile Include="IRoom.cpp" />
+    <ClCompile Include="IUsers.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyException.cpp" />
@@ -145,16 +149,19 @@
     <ClCompile Include="Service.cpp" />
     <ClCompile Include="Single.cpp" />
     <ClCompile Include="Triple.cpp" />
-    <ClCompile Include="Users.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Accomodation.h" />
+    <ClInclude Include="Admin.h" />
+    <ClInclude Include="Client.h" />
     <ClInclude Include="CRoom.h" />
+    <ClInclude Include="CUsers.h" />
     <ClInclude Include="Date.h" />
     <ClInclude Include="Double.h" />
     <ClInclude Include="Extras.h" />
     <ClInclude Include="Facilities.h" />
     <ClInclude Include="IRoom.h" />
+    <ClInclude Include="IUsers.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="MyException.h" />
     <ClInclude Include="Promotions.h" />
@@ -163,7 +170,6 @@
     <ClInclude Include="Service.h" />
     <ClInclude Include="Single.h" />
     <ClInclude Include="Triple.h" />
-    <ClInclude Include="Users.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
