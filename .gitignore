@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/DCS/DCS_Tema1.docx
+/DCS/DCS_V1.docx
+/SQL/BazaDeDate.sql
