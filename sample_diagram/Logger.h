@@ -2,12 +2,11 @@
 #include<string>
 #include<iostream>
 #include<fstream>
-using namespace std;
 
 // print on cmd
 class Logger{
 private:
-	string message;
+	std::string message;
 
 private:
 	Logger();
@@ -16,7 +15,7 @@ private:
 
 public:
 	static Logger& getInstanceLogger();
-	void setMessage(string message);
+	void setMessage(std::string message);
 	void printMessage();
 	void printMessageOnFile();
 };

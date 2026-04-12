@@ -10,6 +10,8 @@ protected:
 	Extras* extras;
 
 public:
+	CRoom(int id, float pricePerNight, Facilities* facilities, Extras* extras) : id(id), pricePerNight(pricePerNight), facilities(facilities), extras(extras) {}
+	virtual ~CRoom() = default;
 	void setPricePerNight(float pricePerNight);
 };
 

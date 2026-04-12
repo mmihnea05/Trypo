@@ -7,7 +7,6 @@ class Extras;
 
 class IRoom{
 public:
-	virtual void setCapacity() = 0;
 	virtual void setPricePerNight(float pricePerNight) = 0;
 };
 

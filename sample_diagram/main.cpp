@@ -11,13 +11,12 @@ int main() {
         //NANODBC_TEXT("Driver={ODBC Driver 17 for SQL Server};Server=10.10.25.219, 1433;Database=Trypo;UID=proiect_user;PWD=parola123;"));
         IUsers* u=new Client("Alin","parola","c@gmail.com","0788888888","2000-11-21","Romania","M","Strada Nu stiu");
         //service->registerUser(u);
-        service->printUsers();
-
-        service->loginUser("c@gmail.com", "parola");
+        //service->printUsers();
+        //service->loginUser("c@gmail.com", "parola");
+        service->startServer();
     }
     catch (const std::exception& e) {
         std::cerr << "Eroare: " << e.what() << std::endl;
     }
-    Logger::getInstanceLogger().printMessage();
     return 0;
 }

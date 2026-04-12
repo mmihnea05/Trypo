@@ -9,6 +9,8 @@ private:
 	// .... .... 
 
 public:
+	Extras(bool breakfast,bool parking, bool pool, bool sauna, bool extraCleaning): breakfast(breakfast), parking(parking), pool(pool),sauna(sauna), extraCleaning(extraCleaning) {}
+	~Extras() = default;
 	void setBreakfast(bool breakfast);
 	void setParking(bool parking);
 	void setPool(bool pool);

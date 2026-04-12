@@ -4,6 +4,7 @@ using namespace std;
 
 class IUsers{
 public:
+    virtual int getId() const = 0;
     virtual std::string getName() const = 0;
     virtual std::string getPassword() const = 0;
     virtual std::string getMail() const = 0;

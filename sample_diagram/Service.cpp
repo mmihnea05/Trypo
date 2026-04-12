@@ -4,13 +4,10 @@ void Service::registerUser(IUsers* newUser) {
     if (!newUser) return;
 
     try {
-        // Pregătim comanda SQL
-        // Notă: Coloana 'Role' va determina dacă obiectul creat la Login va fi Admin sau Client
+
         nanodbc::statement stmt(this->conn);
         nanodbc::prepare(stmt, "INSERT INTO Users (Name, Password, Mail, PhoneNumber, BirthDate, Country, Gender, Address, Role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-        // Extragem datele folosind getterele din interfață
-        // Salvăm în variabile locale pentru a păstra memoria validă pentru .c_str()
         std::string n = newUser->getName();
         std::string p = newUser->getPassword();
         std::string m = newUser->getMail();
@@ -19,14 +16,7 @@ void Service::registerUser(IUsers* newUser) {
         std::string c = newUser->getCountry();
         std::string g = newUser->getGender();
         std::string a = newUser->getAddress();
-        Admin* adminPtr = dynamic_cast<Admin*>(this->user);
-        int r;
-        if (adminPtr) {
-            r = 1;
-        }
-        else {
-            r = 0;
-        }
+        int r = 0;
 
         stmt.bind(0, n.c_str());
         stmt.bind(1, p.c_str());
@@ -49,9 +39,16 @@ void Service::registerUser(IUsers* newUser) {
         throw;
     }
 }
+
+ IUsers* Service::findConnectedUsers(int id){
+    for (auto u : this->users)
+        if( u->getId()==id)
+            return u;
+        return nullptr;
+}
+
 void Service::loginUser(string mail,string password) {
     try {
-        cout << "Test login" << endl;
         nanodbc::statement stmt(this->conn);
         nanodbc::prepare(stmt, "SELECT * FROM Users WHERE Mail = ? AND Password = ?");
 
@@ -70,33 +67,28 @@ void Service::loginUser(string mail,string password) {
             string address = result.get<string>(7);
             int rol = result.get<int>("Role");
             string role;
-            if (this->user != nullptr) delete this->user;
-
-            // FACTORY: Creăm obiectul în funcție de rolul din SQL
+            IUsers* u;
             if (rol == 1) {
-                this->user = new Admin(nume,password,mail,phone);
+                u = new Admin(nume,password,mail,phone);
                 role = "Admin";
+
+                this->users.push_back(u);
             }
             else {
-                this->user = new Client(nume,password,mail,phone,birthDate,country,gender,address);
+                u = new Client(nume,password,mail,phone,birthDate,country,gender,address);
                 role = "Client";
             }
-            cout << "Login reusit pentru: " << nume << " [" << rol << "]";
             Logger::getInstanceLogger().setMessage("Login reusit pentru: " + nume + " [" + role + "]");
             Logger::getInstanceLogger().printMessageOnFile();
         }
         else {
             Logger::getInstanceLogger().setMessage("Tentativa de login esuata pentru: " + mail);
             Logger::getInstanceLogger().printMessageOnFile();
-            delete this->user;
-            this->user = nullptr;
         }
     }
     catch (const std::exception& e) {
         Logger::getInstanceLogger().setMessage("Eroare SQL Login: " + std::string(e.what()));
         Logger::getInstanceLogger().printMessageOnFile();
-        delete this->user;
-        this->user = nullptr;
     }
 }
 
@@ -105,7 +97,6 @@ void Service::printUsers() {
     auto results = nanodbc::execute(getConn(), "SELECT Id, Name, Mail, Country, Role FROM Users");
 
     while (results.next()) {
-        // Preluam datele dupa index (0, 1, 2...) sau dupa numele coloanei
         int id = results.get<int>("Id");
         string nume = results.get<string>("Name");
         string email = results.get<string>("Mail");
@@ -118,5 +109,74 @@ void Service::printUsers() {
             role = "Admin";
 
         cout << "ID: " << id << " | Nume: " << nume << " | Email: " << email << " | Tara: " << tara  <<" | Rol: "<< role << endl;
+    }
+}
+
+void Service::printRentals() {
+    cout << "Lista unitatilor de cazare: " << endl;
+    auto results = nanodbc::execute(getConn(), "SELECT id, name, address,capacity FROM RentalUnit");
+
+    while (results.next()) {
+        int id = results.get<int>("id");
+        string nume = results.get<string>("name");
+        string address = results.get<string>("address");
+        int capacity = results.get<int>("capacity");
+        cout << "ID: " << id << " | Nume: " << nume << " | Adresa: " << address << " | Capacity: " << capacity<< endl;
+    }
+}
+
+void Service::loadAllRentals() {
+    auto results = nanodbc::execute(getConn(), "SELECT * FROM RentalUnit");
+    while (results.next()) {
+        int id = results.get<int>("id");
+        string nume = results.get<string>("name");
+        string address = results.get<string>("address");
+        int capacity = results.get<int>("capacity");
+        float discount = results.get<float>("discount");
+
+        RentalUnit* r= new RentalUnit(id, nume, address, capacity, discount);
+        if(findRentalById(id)==nullptr)
+            this->rentals.push_back(r);
+    }
+
+}
+RentalUnit* Service::findRentalById(int id) {
+    for (auto r : this->rentals)
+        if (r->getId() == id)
+            return r;
+    return nullptr;
+}
+void Service::populateRoomsOfRental(int id) {
+    nanodbc::statement stmt(this->conn);
+    nanodbc::prepare(stmt,("SELECT * FROM Rooms WHERE rentalUnitID = ?"));
+    stmt.bind(0, &id);
+    auto results = nanodbc::execute(stmt);
+    while (results.next()) {
+        int capacity = results.get<int>("capacity");
+        int ID = results.get<int>("id");
+        float price = results.get<float>("pricePerNight");
+        bool bf = results.get<int>("breakfast");
+        bool eC = results.get<int>("extraCleaning");
+        bool park = results.get<int>("parking");
+        bool pool = results.get<int>("pool");
+        bool sauna = results.get<int>("sauna");
+        bool AC = results.get<int>("AC");
+        bool balcony = results.get<int>("balcony");
+        bool couch = results.get<int>("couch");
+        bool fridge = results.get<int>("fridge");
+        int numBeds = results.get<int>("numBeds");
+        bool TV = results.get<int>("TV");
+        Extras* e = new Extras(bf,park, pool, sauna, eC);
+        Facilities* f = new Facilities(balcony, fridge, AC, numBeds, TV, couch);
+        RentalUnit* r = findRentalById(id);
+        IRoom* c;
+        if (capacity == 1)
+            c = new Single(ID,price,f,e);
+        else
+            if (capacity == 2)
+                c = new Double(ID,price,f,e);
+            else
+                c = new Triple(ID,price,f,e);
+        r->addRoom(c);
     }
 }

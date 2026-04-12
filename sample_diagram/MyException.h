@@ -2,16 +2,14 @@
 #include<string>
 using namespace std;
 
-class MyException{
+class MyException : public std::exception {
 private:
-	string message;
-
-private:
-	MyException();
-	MyException(const MyException& obj) = delete;
-	MyException& operator=(const MyException& obj) = delete;
+    std::string message;
 
 public:
-	static MyException& getInstanceMyException();
-};
+    MyException(const std::string& msg) : message(msg) {}
 
+    const char* what() const noexcept override {
+        return message.c_str();
+    }
+};

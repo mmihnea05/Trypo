@@ -10,6 +10,7 @@ private:
 	// ..... .....
 
 public:
+	Facilities(bool balcony,bool fridge,bool AC, int numBeds, bool TV, bool couch): balcony(balcony), fridge(fridge), AC(AC), numBeds(numBeds),TV(TV), couch(couch){}
 	void setBalcony(bool balcony);
 	void setFridge(bool fridge);
 	void setAC(bool AC);

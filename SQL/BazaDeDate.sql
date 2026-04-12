@@ -1,23 +1,61 @@
-CREATE DATABASE Trypo
+CREATE DATABASE Trypo;
+GO
 
-USE Trypo
+USE Trypo;
+GO
+
 CREATE TABLE Users (
-    -- ID-ul se va incrementa automat la fiecare inserare (1, 2, 3...)
-    Id INT PRIMARY KEY IDENTITY(1,1), 
-    
-    -- NVARCHAR(255) permite caractere speciale și lungime variabilă
-    Nume NVARCHAR(100) NOT NULL,
-    Parola NVARCHAR(255) NOT NULL,
-    Email NVARCHAR(150) UNIQUE NOT NULL, -- UNIQUE asigură că nu avem dubluri
-    Telefon NVARCHAR(20),
-    
-    -- Data nasterii sub forma de tip DATE (format standard: YYYY-MM-DD)
-    DataNastere DATE,
-    
-    Tara NVARCHAR(50),
-    Gen NVARCHAR(15),
-    Adresa NVARCHAR(MAX) -- MAX permite texte foarte lungi
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(255) NOT NULL,
+    Password NVARCHAR(255) NOT NULL,
+    Mail NVARCHAR(255) NOT NULL UNIQUE,
+    PhoneNumber NVARCHAR(50),
+    BirthDate DATE,
+    Country NVARCHAR(100),
+    Gender NVARCHAR(50),
+    Address NVARCHAR(MAX),
+    Role BIT NOT NULL -- 0 pentru client, 1 pentru admin
 );
+GO
 
-Delete from Users
-where Id=1
+CREATE TABLE RentalUnit (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    capacity INT NOT NULL,
+    address NVARCHAR(MAX) NOT NULL,
+    name NVARCHAR(255) NOT NULL,
+    discount FLOAT DEFAULT 0.0
+);
+GO
+
+CREATE TABLE Rooms (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    rentalUnitID INT NOT NULL,
+    capacity INT NOT NULL,
+    pricePerNight FLOAT NOT NULL,
+    breakfast BIT DEFAULT 0,
+    extraCleaning BIT DEFAULT 0,
+    parking BIT DEFAULT 0,
+    pool BIT DEFAULT 0,
+    sauna BIT DEFAULT 0,
+    AC BIT DEFAULT 0,
+    balcony BIT DEFAULT 0,
+    couch BIT DEFAULT 0,
+    fridge BIT DEFAULT 0,
+    numBeds INT NOT NULL,
+    TV BIT DEFAULT 0,
+    CONSTRAINT FK_Rooms_RentalUnit FOREIGN KEY (rentalUnitID) REFERENCES RentalUnit(id) ON DELETE CASCADE
+);
+GO
+
+CREATE TABLE Accomodation (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    status NVARCHAR(50) NOT NULL CHECK (status IN ('cancelled', 'confirmed', 'finished')),
+    clientId INT NOT NULL,
+    rentedRoomId INT NOT NULL,
+    checkIn DATE NOT NULL,
+    checkOut DATE NOT NULL,
+    CONSTRAINT FK_Accomodation_Users FOREIGN KEY (clientId) REFERENCES Users(id),
+    CONSTRAINT FK_Accomodation_Rooms FOREIGN KEY (rentedRoomId) REFERENCES Rooms(id) ON DELETE CASCADE
+);
+GO
+
