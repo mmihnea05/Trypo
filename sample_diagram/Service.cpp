@@ -128,6 +128,7 @@ void Service::printUsers() {
         string nume = results.get<string>("Name");
         string email = results.get<string>("Mail");
         string tara = results.get<string>("Country");
+        string adr = results.get<string>("Address");
         int rol = results.get<int>("Role");
         string role;
         if (rol == 0)
@@ -135,7 +136,7 @@ void Service::printUsers() {
         else
             role = "Admin";
 
-        cout << "ID: " << id << " | Nume: " << nume << " | Email: " << email << " | Tara: " << tara  <<" | Rol: "<< role << endl;
+        cout << "ID: " << id << " | Nume: " << nume << " | Email: " << email << " | Tara: " << tara  <<" | Rol: "<< role <<" | Adresa: " << adr<<endl;
     }
 }
 
