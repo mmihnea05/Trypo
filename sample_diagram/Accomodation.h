@@ -15,6 +15,5 @@ private:
 	status accomodationStatus;
 
 public:
-
 };
 

@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include <sstream>
 #include <iostream>
 #include <vector>
 #include <thread>
@@ -21,6 +22,9 @@
 #include "Extras.h"
 #include "Facilities.h"
 #include "MyException.h"
+#include "Accomodation.h"
+#include "json.hpp" // nlohmann/json
+using json = nlohmann::json;
 #pragma comment(lib, "ws2_32.lib")
 
 
@@ -60,6 +64,119 @@ public:
             Logger::getInstanceLogger().printMessageOnFile();
         }
     }
+
+    void handleClient(SOCKET clientSocket, std::string clientIP) {
+        char buffer[4096];
+        std::string emailLogat = "";
+
+        while (serverRunning) {
+            int bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
+            if (bytesReceived <= 0) break;
+
+            buffer[bytesReceived] = '\0';
+            std::string request(buffer);
+
+            try {
+                auto j = json::parse(request);
+
+
+                if (j.contains("type") && j["type"] == "REGISTER_USER") {
+                    IUsers* newUser = new Client(
+                        j["name"].get<std::string>(), j["password"].get<std::string>(),
+                        j["email"].get<std::string>(), j["phone"].get<std::string>(),
+                        j["dob"].get<std::string>(), j["country"].get<std::string>(),
+                        j["gender"].get<std::string>(), j["address"].get<std::string>()
+                    );
+
+                    json res;
+                    res["type"] = "REGISTER_RESPONSE";
+                    if (this->searchUser(newUser)) {
+                        res["status"] = "error";
+                        res["message"] = "Acest email este deja utilizat!";
+                    }
+                    else {
+                        this->registerUser(newUser);
+                        res["status"] = "success";
+                        res["message"] = "Cont creat cu succes!";
+                    }
+                    send(clientSocket, res.dump().c_str(), (int)res.dump().length(), 0);
+                    delete newUser;
+                }
+
+                else if (j.contains("type") && j["type"] == "LOGIN_USER") {
+                    std::string email = j["email"].get<std::string>();
+                    std::string password = j["password"].get<std::string>();
+
+                    json res;
+                    res["type"] = "LOGIN_RESPONSE";
+
+                    bool isAlreadyConnected = false;
+                    for (auto u : this->users) {
+                        if (u->getMail() == email) {
+                            isAlreadyConnected = true;
+                            break;
+                        }
+                    }
+
+                    if (isAlreadyConnected) {
+                        res["status"] = "error";
+                        res["message"] = "Utilizatorul este deja conectat";
+                    }
+                    else {
+                        IUsers* user = this->loginUser(email, password);
+                        if (user != nullptr) {
+                            emailLogat = email;
+
+                            res["status"] = "success";
+                            json userData;
+                            userData["name"] = user->getName();
+                            userData["email"] = user->getMail();
+                            userData["phone"] = user->getPhone();
+
+                            Client* c = dynamic_cast<Client*>(user);
+                            if (c) {
+                                userData["role"] = 0;
+                                userData["dob"] = c->getBirthDate();
+                                userData["country"] = c->getCountry();
+                                userData["gender"] = c->getGender();
+                                userData["address"] = c->getAddress();
+                            }
+                            else {
+                                userData["role"] = 1;
+                            }
+                            res["data"] = userData;
+                            cout << res;
+                        }
+                        else {
+                            res["status"] = "error";
+                            res["message"] = "Date incorecte.";
+                        }
+                    }
+                    send(clientSocket, res.dump().c_str(), (int)res.dump().length(), 0);
+                }
+            }
+            catch (const std::exception& e) {
+                std::cout << "Eroare: " << e.what() << std::endl;
+            }
+        }
+
+        if (!emailLogat.empty()) {
+
+
+            for (auto it = users.begin(); it != users.end(); ++it) {
+                if ((*it)->getMail() == emailLogat) {
+                    Logger::getInstanceLogger().setMessage("[CLEANUP] Client deconectat." + emailLogat);
+                    Logger::getInstanceLogger().printMessageOnFile();
+                    delete* it;
+                    users.erase(it); 
+                    break;
+                }
+            }
+        }
+
+        closesocket(clientSocket);
+    }
+
     void startServer() {
         serverSocket = socket(AF_INET, SOCK_STREAM, 0);
         if (serverSocket == INVALID_SOCKET) {
@@ -103,13 +220,11 @@ public:
             if (clientSocket != INVALID_SOCKET && serverRunning) {
                 char clientIP[INET_ADDRSTRLEN];
                 inet_ntop(AF_INET, &clientAddr.sin_addr, clientIP, INET_ADDRSTRLEN);
+                cout << "Client connectat la server";
                 Logger::getInstanceLogger().setMessage(std::string("[CONEXIUNE] Client nou: ") + std::string(clientIP));
                 Logger::getInstanceLogger().printMessageOnFile();
-
-                const char* msg = "Salut din Serverul C++!";
-                send(clientSocket, msg, (int)strlen(msg), 0);
-
-                closesocket(clientSocket);
+                std::thread t(&Service::handleClient, this, clientSocket, std::string(clientIP));
+                t.detach();
             }
         }
     }
@@ -130,12 +245,13 @@ public:
         stopServer();
     }
     void registerUser(IUsers* newUser);
-    void loginUser(string mail, string password);
+    bool searchUser(IUsers* newUser);
+    IUsers* loginUser(string mail, string password);
     void printUsers();
     void printRentals();
     void loadAllRentals();
     RentalUnit* findRentalById(int id);
     void populateRoomsOfRental(int id);
-    IUsers* findConnectedUsers(int id);
+
 };
 

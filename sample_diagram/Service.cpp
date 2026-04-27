@@ -3,6 +3,9 @@
 void Service::registerUser(IUsers* newUser) {
     if (!newUser) return;
 
+    if (this->searchUser(newUser)) {
+        throw std::runtime_error("Email-ul este deja inregistrat.");
+    }
     try {
 
         nanodbc::statement stmt(this->conn);
@@ -38,16 +41,37 @@ void Service::registerUser(IUsers* newUser) {
         Logger::getInstanceLogger().printMessageOnFile();
         throw;
     }
+
+}
+bool Service::searchUser(IUsers* newUser) {
+    try {
+        nanodbc::statement stmt(this->conn);
+        nanodbc::prepare(stmt, "SELECT * FROM Users WHERE Mail = ?");
+
+        stmt.bind(0, newUser->getMail().c_str());
+
+        auto result = nanodbc::execute(stmt);
+
+        if (result.next())
+            return true;
+        else
+            return false;
+    }
+    catch (const std::exception& e) {
+        Logger::getInstanceLogger().setMessage("Eroare SQL Login: " + std::string(e.what()));
+        Logger::getInstanceLogger().printMessageOnFile();
+        return true;
+    }
 }
 
- IUsers* Service::findConnectedUsers(int id){
-    for (auto u : this->users)
-        if( u->getId()==id)
-            return u;
-        return nullptr;
-}
-
-void Service::loginUser(string mail,string password) {
+IUsers* Service::loginUser(string mail,string password) {
+    for (auto u : this->users) {
+        if (u->getMail() == mail) {
+            Logger::getInstanceLogger().setMessage("Tentativa de login dublu pentru: " + mail);
+            Logger::getInstanceLogger().printMessageOnFile();
+            return nullptr;
+        }
+    }
     try {
         nanodbc::statement stmt(this->conn);
         nanodbc::prepare(stmt, "SELECT * FROM Users WHERE Mail = ? AND Password = ?");
@@ -67,19 +91,22 @@ void Service::loginUser(string mail,string password) {
             string address = result.get<string>(7);
             int rol = result.get<int>("Role");
             string role;
-            IUsers* u;
+            IUsers* u=nullptr;
             if (rol == 1) {
                 u = new Admin(nume,password,mail,phone);
                 role = "Admin";
 
                 this->users.push_back(u);
+
             }
             else {
                 u = new Client(nume,password,mail,phone,birthDate,country,gender,address);
                 role = "Client";
+
             }
             Logger::getInstanceLogger().setMessage("Login reusit pentru: " + nume + " [" + role + "]");
             Logger::getInstanceLogger().printMessageOnFile();
+            return u;
         }
         else {
             Logger::getInstanceLogger().setMessage("Tentativa de login esuata pentru: " + mail);
