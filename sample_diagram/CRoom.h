@@ -15,8 +15,5 @@ public:
 	int getId() { return id; }
 	virtual float getPrice() = 0;
 	Facilities* getFacilities() { return facilities; }
-	int getId() { return id; }
-	virtual float getPrice()=0;
-	Facilities* getFacilities() { return facilities; }
 };
 

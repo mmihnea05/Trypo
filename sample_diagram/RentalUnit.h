@@ -37,9 +37,5 @@ public:
 	string getAddress() { return address; }
 	string getLocation() { return location; }
 	vector<IRoom*> getRooms() { return this->rooms; }
-	string getName() { return name; }
-	string getAddress() { return address; }
-	string getLocation() { return location; }
-	vector<IRoom*> getRooms() { return this->rooms; }
 };
 
