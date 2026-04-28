@@ -118,6 +118,7 @@ IUsers* Service::loginUser(string mail, string password) {
         Logger::getInstanceLogger().setMessage("Eroare SQL Login: " + std::string(e.what()));
         Logger::getInstanceLogger().printMessageOnFile();
     }
+    return nullptr;
 }
 
 void Service::printUsers() {

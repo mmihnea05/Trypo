@@ -24,18 +24,16 @@ public:
 		this->promotion = new Promotions(promotion);
 	}
 	~RentalUnit() {
-		for (auto a : rooms) {
-			delete a;
-		}
+		rooms.clear();
 	}
 	void addRoom(IRoom* r) {
 		this->rooms.push_back(r);
 	}
 
-	int getId() { return id; }
-	string getName() { return name;  }
-	string getAddress() { return address; }
-	string getLocation() { return location; }
-	vector<IRoom*> getRooms() { return this->rooms; }
+	int getId()const { return id; }
+	string getName() const { return name;  }
+	string getAddress()const { return address; }
+	string getLocation()const { return location; }
+	vector<IRoom*> getRooms()const { return this->rooms; }
 };
 

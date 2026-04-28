@@ -7,5 +7,5 @@ public:
 		capacity = 1;
 	}
 	float getPrice() { return pricePerNight; }
-	~Single(){}
+	~Single() = default;
 };
