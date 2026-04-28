@@ -1,0 +1,5 @@
+D:/atm - calc/anul_2/sem_2/poo_pr/Trypo_frontend/build/Desktop_Qt_6_11_0_MinGW_64_bit-Debug/CMakeFiles/Trypo_frontend.dir
+D:/atm - calc/anul_2/sem_2/poo_pr/Trypo_frontend/build/Desktop_Qt_6_11_0_MinGW_64_bit-Debug/CMakeFiles/edit_cache.dir
+D:/atm - calc/anul_2/sem_2/poo_pr/Trypo_frontend/build/Desktop_Qt_6_11_0_MinGW_64_bit-Debug/CMakeFiles/rebuild_cache.dir
+D:/atm - calc/anul_2/sem_2/poo_pr/Trypo_frontend/build/Desktop_Qt_6_11_0_MinGW_64_bit-Debug/CMakeFiles/Trypo_frontend_autogen_timestamp_deps.dir
+D:/atm - calc/anul_2/sem_2/poo_pr/Trypo_frontend/build/Desktop_Qt_6_11_0_MinGW_64_bit-Debug/CMakeFiles/Trypo_frontend_autogen.dir
