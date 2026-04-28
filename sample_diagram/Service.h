@@ -304,17 +304,19 @@ public:
 
 			SOCKET clientSocket = accept(serverSocket, (sockaddr*)&clientAddr, &clientSize);
 
-			if (clientSocket != INVALID_SOCKET && serverRunning) {
-				char clientIP[INET_ADDRSTRLEN];
-				inet_ntop(AF_INET, &clientAddr.sin_addr, clientIP, INET_ADDRSTRLEN);
-				cout << "Client connectat la server";
-				Logger::getInstanceLogger().setMessage(std::string("[CONEXIUNE] Client nou: ") + std::string(clientIP));
-				Logger::getInstanceLogger().printMessageOnFile();
-				std::thread t(&Service::handleClient, this, clientSocket, std::string(clientIP));
-				t.detach();
-			}
-		}
-	}
+            if (clientSocket != INVALID_SOCKET && serverRunning) {
+                char clientIP[INET_ADDRSTRLEN];
+                inet_ntop(AF_INET, &clientAddr.sin_addr, clientIP, INET_ADDRSTRLEN);
+                Logger::getInstanceLogger().setMessage(std::string("[CONEXIUNE] Client nou: ") + std::string(clientIP));
+                Logger::getInstanceLogger().printMessageOnFile();
+
+                const char* msg = "Salut din Serverul C++!";
+                send(clientSocket, msg, (int)strlen(msg), 0);
+
+                closesocket(clientSocket);
+            }
+        }
+    }
 
 	void stopServer() {
 		serverRunning = false;

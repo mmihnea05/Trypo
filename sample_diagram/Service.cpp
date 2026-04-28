@@ -164,7 +164,7 @@ void Service::loadAllRentals() {
         int capacity = results.get<int>("capacity");
         float discount = results.get<float>("discount");
 
-        RentalUnit* r = new RentalUnit (id, nume,location, address, capacity, discount);
+        RentalUnit* r = new RentalUnit(id, nume, location, address, capacity, discount);
         if (findRentalById(id) == nullptr)
             this->rentals.push_back(r);
     }
@@ -199,7 +199,7 @@ void Service::populateRoomsOfRental(int id) {
         Extras* e = new Extras(bf, park, pool, sauna, eC);
         Facilities* f = new Facilities(balcony, fridge, AC, numBeds, TV, couch);
         RentalUnit* r = findRentalById(id);
-        IRoom* c;
+        IRoom* c=nullptr;
         if (capacity == 1)
             c = new Single(ID, price, f, e);
         else

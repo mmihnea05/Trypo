@@ -6,7 +6,7 @@ using namespace std;
 class IRoom;
 class Promotions;
 
-class RentalUnit{
+class RentalUnit {
 private:
 	int id; // static
 	string name;
@@ -34,6 +34,10 @@ public:
 
 	int getId() { return id; }
 	string getName() { return name;  }
+	string getAddress() { return address; }
+	string getLocation() { return location; }
+	vector<IRoom*> getRooms() { return this->rooms; }
+	string getName() { return name; }
 	string getAddress() { return address; }
 	string getLocation() { return location; }
 	vector<IRoom*> getRooms() { return this->rooms; }
