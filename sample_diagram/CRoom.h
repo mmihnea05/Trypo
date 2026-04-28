@@ -12,6 +12,8 @@ protected:
 public:
 	CRoom(int id, float pricePerNight, Facilities* facilities, Extras* extras) : id(id), pricePerNight(pricePerNight), facilities(facilities), extras(extras) {}
 	virtual ~CRoom() = default;
-	void setPricePerNight(float pricePerNight);
+	int getId() { return id; }
+	virtual float getPrice()=0;
+	Facilities* getFacilities() { return facilities; }
 };
 

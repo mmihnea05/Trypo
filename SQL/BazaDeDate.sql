@@ -21,7 +21,8 @@ GO
 CREATE TABLE RentalUnit (
     id INT IDENTITY(1,1) PRIMARY KEY,
     capacity INT NOT NULL,
-    address NVARCHAR(MAX) NOT NULL,
+    location NVARCHAR(255) NOT NULL,
+    address NVARCHAR(255) NOT NULL,
     name NVARCHAR(255) NOT NULL,
     discount FLOAT DEFAULT 0.0
 );

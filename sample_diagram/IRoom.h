@@ -7,6 +7,8 @@ class Extras;
 
 class IRoom{
 public:
-	virtual void setPricePerNight(float pricePerNight) = 0;
+	virtual int getId()=0;
+	virtual float getPrice()=0;
+	virtual Facilities* getFacilities() = 0;
 };
 

@@ -6,4 +6,5 @@ public:
 		pricePerNight = price * 1.5;
 		capacity = 3;
 	}
+	float getPrice() { return pricePerNight; }
 };

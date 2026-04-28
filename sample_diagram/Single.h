@@ -6,6 +6,7 @@ public:
 		pricePerNight = price * 1.2;
 		capacity = 1;
 	}
+	float getPrice() { return pricePerNight; }
 	~Single(){}
 };
 
