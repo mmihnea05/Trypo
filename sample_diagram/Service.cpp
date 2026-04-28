@@ -64,7 +64,7 @@ void Service::loginUser(string mail,string password) {
             string birthDate = result.get<string>("BirthDate");
             string country = result.get<string>("Country");
             string gender = result.get<string>("Gender");
-            string address = result.get<string>(7);
+            string address = result.get<string>("Address");
             int rol = result.get<int>("Role");
             string role;
             IUsers* u;
@@ -94,7 +94,7 @@ void Service::loginUser(string mail,string password) {
 
 void Service::printUsers() {
     cout << "Lista utilizatorilor: " << endl;
-    auto results = nanodbc::execute(getConn(), "SELECT Id, Name, Mail, Country, Role FROM Users");
+    auto results = nanodbc::execute(getConn(), "SELECT * FROM Users");
 
     while (results.next()) {
         int id = results.get<int>("Id");
@@ -109,6 +109,7 @@ void Service::printUsers() {
             role = "Admin";
 
         cout << "ID: " << id << " | Nume: " << nume << " | Email: " << email << " | Tara: " << tara  <<" | Rol: "<< role << endl;
+        cout << "ID: " << id << " | Nume: " << nume << " | Email: " << email << " | Tara: " << tara  <<" | Rol: "<< role <<" | Adresa: " << adr<<endl;
     }
 }
 

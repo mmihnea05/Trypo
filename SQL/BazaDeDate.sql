@@ -13,7 +13,7 @@ CREATE TABLE Users (
     BirthDate DATE,
     Country NVARCHAR(100),
     Gender NVARCHAR(50),
-    Address NVARCHAR(MAX),
+    Address NVARCHAR(255),
     Role BIT NOT NULL -- 0 pentru client, 1 pentru admin
 );
 GO

@@ -58,6 +58,7 @@ public:
         catch (const MyException& e) {
             Logger::getInstanceLogger().setMessage("Eroare la conectare: " + std::string(e.what()));
             Logger::getInstanceLogger().printMessageOnFile();
+            }
         }
     }
     void startServer() {
